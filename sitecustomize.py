@@ -19,7 +19,7 @@ def inject(a):
     for type, name, _, _, _ in a:
         #print(tok_name[type], name)
         l.append(Token(type, name))
-        print(l)
+        #print(l)
         if l[0].type == tokenize.NAME:
             if len(l) > 1:
                 if l[1].name != '+' and l[1].name != '-':
@@ -125,7 +125,10 @@ def decode(input, errors='strict'):
     #print('call decode')
     if isinstance(input, memoryview):
         input = input.tobytes().decode('utf-8')
-    return UTF8.decode(transform(StringIO(input)), errors)
+    #return UTF8.decode(transform(StringIO(input)), errors)
+    input = transform(input)
+    return input, len(input)
+    return UTF8.decode(transform(input), errors)
 
 class IncrementalDecoder(utf_8.IncrementalDecoder):
     def decode(self, input, final=False):
