@@ -6,6 +6,7 @@ from io import StringIO
 from encodings import utf_8
 
 from .increment import increment
+from .comment import comment
 
 UTF8 = encodings.search_function('utf8')
 
@@ -14,6 +15,7 @@ def transform(stream):
     a = tokenize.generate_tokens(StringIO(stream).readline)
 
     a = increment(a)
+    a = comment(a)
 
     return tokenize.untokenize(a)
 

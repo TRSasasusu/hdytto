@@ -1,5 +1,4 @@
 import tokenize
-from tokenize import TokenInfo
 from token import tok_name
 
 from .util import Token
@@ -7,8 +6,6 @@ from .util import Token
 
 def increment(a):
     l = []
-    var = None
-    one_plus = False
     for type, name, _, _, _ in a:
         #print(tok_name[type], name)
         l.append(Token(type, name))
