@@ -13,9 +13,7 @@ def increment(a):
         if l[0].type == tokenize.NAME:
             if len(l) > 1:
                 if l[1].name != '+' and l[1].name != '-':
-                    for t, n in l:
-                        yield t, n
-                    l = []
+                    yield l.pop(0)
                     continue
             if len(l) < 3:
                 continue
@@ -47,16 +45,12 @@ def increment(a):
                 yield tokenize.OP, ')'
                 l = []
                 continue
-            for t, n in l:
-                yield t, n
-            l = []
+            yield l.pop(0)
             continue
         elif l[0].name == '+':
             if len(l) > 1:
                 if l[1].name != '+' and l[1].name != '-':
-                    for t, n in l:
-                        yield t, n
-                    l = []
+                    yield l.pop(0)
                     continue
             if len(l) < 3:
                 continue
@@ -70,16 +64,12 @@ def increment(a):
                 yield tokenize.OP, ')'
                 l = []
                 continue
-            for t, n in l:
-                yield t, n
-            l = []
+            yield l.pop(0)
             continue
         elif l[0].name == '-':
             if len(l) > 1:
                 if l[1].name != '+' and l[1].name != '-':
-                    for t, n in l:
-                        yield t, n
-                    l = []
+                    yield l.pop(0)
                     continue
             if len(l) < 3:
                 continue
@@ -93,14 +83,10 @@ def increment(a):
                 yield tokenize.OP, ')'
                 l = []
                 continue
-            for t, n in l:
-                yield t, n
-            l = []
+            yield l.pop(0)
             continue
 
-        for t, n in l:
-            yield t, n
-        l = []
+        yield l.pop(0)
 
     for t, n in l:
         yield t, n

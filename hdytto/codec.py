@@ -12,10 +12,12 @@ UTF8 = encodings.search_function('utf8')
 
 def transform(stream):
     #print("call transform")
+
+    stream = comment(stream)
+
     a = tokenize.generate_tokens(StringIO(stream).readline)
 
     a = increment(a)
-    a = comment(a)
 
     return tokenize.untokenize(a)
 
