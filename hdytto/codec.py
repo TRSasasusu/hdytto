@@ -7,8 +7,14 @@ from encodings import utf_8
 
 from .increment import increment
 from .comment import comment
+from .dowhile import dowhile
 
 UTF8 = encodings.search_function('utf8')
+
+def check_a(a):
+    for t, n in a:
+        print(f'{n} ', end='')
+        yield t, n
 
 def transform(stream):
     #print("call transform")
@@ -18,6 +24,11 @@ def transform(stream):
     a = tokenize.generate_tokens(StringIO(stream).readline)
 
     a = increment(a)
+    a = dowhile(a)
+
+    #a = list(tokenize.untokenize(a))
+    #print(''.join(a))
+    #return iter(a)
 
     return tokenize.untokenize(a)
 
