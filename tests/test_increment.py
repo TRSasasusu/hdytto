@@ -11,6 +11,9 @@ class TestIncrement(unittest.TestCase):
         self.assertEqual(10, b)
         self.assertEqual(9, b-- - 1)
         self.assertEqual(8, --b)
+        if ++a >= 8:
+            a = 20
+        self.assertEqual(20, a)
 
 if __name__ == '__main__':
     unittest.main()

@@ -19,13 +19,14 @@ def recalculate_3tuples(a):
     row = 1
     for type, name in a:
         l.append(Token(type, name))
+        #print(l)
         if l[-1].type == tokenize.INDENT:
             indent_num += 1
             indent_stack.append(l[-1].name)
         elif l[-1].type == tokenize.DEDENT:
             indent_num -= 1
             indent_stack.pop(-1)
-        elif l[-1].type == tokenize.NEWLINE or l[-1].type == tokenize.ENDMARKER:
+        elif l[-1].type == tokenize.NEWLINE or l[-1].type == tokenize.NL or l[-1].type == tokenize.ENDMARKER:
             physical_line = ' '.join([n for _, n in l])
             if l[0].type != tokenize.INDENT and len(indent_stack) > 0:
                 col = len(indent_stack[-1])
@@ -34,7 +35,8 @@ def recalculate_3tuples(a):
                 col = 0
             for t, n in l:
                 yield t, n, (row, col), (row, (col := col + len(n))), physical_line
-                col += 1
+                if t != tokenize.INDENT and t != tokenize.DEDENT:
+                    col += 1
             l = []
             row += 1
 
