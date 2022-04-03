@@ -8,3 +8,7 @@ b = ++a
 print(b--)
 print(--b)
 print(b)
+
+if a > 4:
+    print(a)
+    print(a)

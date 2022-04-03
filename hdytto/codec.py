@@ -8,13 +8,41 @@ from encodings import utf_8
 from .increment import increment
 from .comment import comment
 from .dowhile import dowhile
+from .util import Token
 
 UTF8 = encodings.search_function('utf8')
 
+def recalculate_3tuples(a):
+    l = []
+    indent_num = 0
+    indent_stack = []
+    row = 1
+    for type, name in a:
+        l.append(Token(type, name))
+        if l[-1].type == tokenize.INDENT:
+            indent_num += 1
+            indent_stack.append(l[-1].name)
+        elif l[-1].type == tokenize.DEDENT:
+            indent_num -= 1
+            indent_stack.pop(-1)
+        elif l[-1].type == tokenize.NEWLINE or l[-1].type == tokenize.ENDMARKER:
+            physical_line = ' '.join([n for _, n in l])
+            if l[0].type != tokenize.INDENT and len(indent_stack) > 0:
+                col = len(indent_stack[-1])
+                physical_line = indent_stack[-1] + physical_line
+            else:
+                col = 0
+            for t, n in l:
+                yield t, n, (row, col), (row, (col := col + len(n))), physical_line
+                col += 1
+            l = []
+            row += 1
+
+
 def check_a(a):
-    for t, n in a:
-        print(f'{n} ', end='')
-        yield t, n
+    for t, n, x, y, z in a:
+        print(f'{t}{n} ({x},{y},{z})', end='')
+        yield t, n, x, y, z
 
 def transform(stream):
     #print("call transform")
@@ -25,6 +53,8 @@ def transform(stream):
 
     a = increment(a)
     a = dowhile(a)
+    a = recalculate_3tuples(a)
+    #a = check_a(a)
 
     #a = list(tokenize.untokenize(a))
     #print(''.join(a))
