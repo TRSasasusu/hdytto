@@ -8,7 +8,7 @@ from encodings import utf_8
 from .increment import increment
 from .comment import comment
 from .dowhile import dowhile
-from .util import Token
+from .util import Token, isrepl
 
 UTF8 = encodings.search_function('utf8')
 
@@ -24,8 +24,9 @@ def recalculate_3tuples(a):
             indent_num += 1
             indent_stack.append(l[-1].name)
         elif l[-1].type == tokenize.DEDENT:
-            indent_num -= 1
-            indent_stack.pop(-1)
+            if indent_num > 0:
+                indent_num -= 1
+                indent_stack.pop(-1)
         elif l[-1].type == tokenize.NEWLINE or l[-1].type == tokenize.NL or l[-1].type == tokenize.ENDMARKER:
             physical_line = ' '.join([n for _, n in l])
             if l[0].type != tokenize.INDENT and len(indent_stack) > 0:
