@@ -4,8 +4,9 @@ A library adding new syntax into your Python.
 i.e. It is NOT Pythonic :)
 
 * [Compatibility](#compatibility)
-* [Usage](#usage)
-* [API](#api)
+* [Getting Started](#getting-started)
+  * [REPL](#repl)
+* [hdytto Reference](#hdytto-reference)
   * [Increment / Decrement](#increment--decrement)
   * [do...while](#dowhile)
   * [Comment](#comment)
@@ -14,16 +15,22 @@ i.e. It is NOT Pythonic :)
 
 * Python >=3.8
 
-## Usage
+## Getting Started
 
-At first, make `sitecustomize.py`:
+Install from [PyPI](https://pypi.org/project/hdytto/):
+
+```bash
+$ pip install hdytto
+```
+
+This library cannot be used by `import hdytto` as in other libraries, but the usage is simple. At first, make `sitecustomize.py`:
 
 ```python
 from hdytto import register_hdytto
 register_hdytto()
 ```
 
-Set the environmental variable `PYTHONPATH` the path to the directory containing the `sitecustomize.py`.
+Set the environmental variable `PYTHONPATH` the path to the directory containing the `sitecustomize.py` (e.g. `export PYTHONPATH=.`).
 Then, run `main.py`:
 
 ```
@@ -41,7 +48,33 @@ The output will be
 6
 ```
 
-## API
+### REPL
+
+Additionally, make `.pythonrc.py`:
+
+```python
+import sys
+import sitecustomize
+sys.stdin.reconfigure(encoding='hdytto')
+```
+
+Set the environmental variable `PYTHONSTARTUP` the path to this `.pythonrc.py` (e.g. `export PYTHONSTARTUP=.pythonrc.py`).
+Then, type `python`:
+
+```
+$ python
+>>> a = 5
+>>> a++
+5
+>>> do:
+...     b = ++a
+...     while b < 10
+...
+>>> b
+10
+```
+
+## hdytto Reference
 ### Increment / Decrement
 #### Syntax
 
