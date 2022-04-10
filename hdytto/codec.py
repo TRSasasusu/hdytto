@@ -8,7 +8,8 @@ from encodings import utf_8
 from .increment import increment
 from .comment import comment
 from .dowhile import dowhile
-from .util import Token, isrepl
+from .const import const
+from .util import Token, isrepl, syntax_error_util
 
 UTF8 = encodings.search_function('utf8')
 
@@ -49,12 +50,14 @@ def check_a(a):
 
 def transform(stream):
     #print("call transform")
+    syntax_error_util.find_filepath(stream)
 
     stream = comment(stream)
 
     a = tokenize.generate_tokens(StringIO(stream).readline)
 
     a = increment(a)
+    a = const(a)
     a = dowhile(a)
     a = recalculate_3tuples(a)
     #a = check_a(a)
