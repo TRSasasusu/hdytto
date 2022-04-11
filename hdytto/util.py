@@ -27,7 +27,8 @@ class SyntaxErrorUtil:
             self.filepath = '<stdin>'
             return
 
-        self._find_filepath(sys.argv[0], file_content)
+        if not self._find_filepath(sys.argv[0], file_content):
+            self.filepath = '<some script>'
 
     def _find_filepath(self, filename, file_content):
         if not os.path.exists(filename):

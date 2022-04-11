@@ -25,7 +25,7 @@ def _in_stack(name, stack):
 
 def const(a):
     const_vars = []
-    const_vars_stack = [StackItem(const_vars, '')]
+    const_vars_stack = [StackItem(const_vars, 0)]
 
     lineno = 1
     l = []
@@ -84,7 +84,7 @@ def const(a):
         if l[0].type == tokenize.DEDENT:
             const_vars_stack[-1].indent -= 1
             yield l.pop(0)
-            if const_vars_stack[-1].indent == 0:
+            if len(const_vars_stack) > 1 and const_vars_stack[-1].indent == 0:
                 const_vars_stack.pop(-1)
                 const_vars = const_vars_stack[-1].const_vars
             continue
@@ -105,7 +105,7 @@ def const(a):
             lineno += 1
         yield l.pop(0)
 
-    print('end')
+    #print('end')
     for t, n in l:
         yield t, n
     l = []
