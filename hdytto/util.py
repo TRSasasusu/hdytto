@@ -19,7 +19,7 @@ class SyntaxErrorUtil:
             raise SyntaxError(msg, (self.filepath, lineno, offset, line))
         except:
             err = sys.exc_info()
-        print(''.join(traceback.format_exception(*err)))
+        print(''.join(traceback.format_exception(*err)[2:]), file=sys.stderr)
         sys.exit(2) # 2 means SyntaxError in Unix.
 
     def find_filepath(self, file_content):
