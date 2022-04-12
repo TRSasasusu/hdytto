@@ -10,6 +10,7 @@ i.e. It is NOT Pythonic :)
   * [Increment / Decrement](#increment--decrement)
   * [do...while](#dowhile)
   * [Comment](#comment)
+  * [const](#const)
 
 ## Compatibility
 
@@ -157,3 +158,43 @@ Output:
 10
 5
 ```
+
+### const
+#### Syntax
+
+```
+const name = value
+```
+
+#### Example
+
+```
+# coding: hdytto
+
+import time
+
+def foo(x, const y):
+    y = 20
+    print(x + y)
+
+print('long time process here.')
+const a = 30
+time.sleep(a) # a process requiring long time
+
+foo(1, 2)
+```
+
+Output:
+```
+  File "main.py", line 6
+    y = 20
+         ^
+SyntaxError: invalid assignment to const y
+
+SyntaxError: encoding problem: hdytto
+```
+
+This is `SyntaxError`, so does not require running the process requiring long time.
+
+#### Caution
+hdytto's `const` only prohibits `=`, `+=`, `-=`, `*=`, `/=`, `%=`, `&=`, `|=`, `^=`, `<<=`, `>>=`, `**=`, `//=`, `@=`, `:=`, otherwise is allowed (e.g. `const l = []` and `l.append(5)` is allowed).
