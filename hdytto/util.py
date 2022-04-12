@@ -20,6 +20,10 @@ class SyntaxErrorUtil:
         except:
             err = sys.exc_info()
         print(''.join(traceback.format_exception(*err)[2:]), file=sys.stderr)
+
+        if isrepl():
+            sys.tracebacklimit = -1
+            raise Exception
         sys.exit(2) # 2 means SyntaxError in Unix.
 
     def find_filepath(self, file_content):

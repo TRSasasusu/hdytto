@@ -7,7 +7,7 @@ import traceback
 import sys
 import inspect
 
-from .util import Token, syntax_error_util
+from .util import Token, syntax_error_util, isrepl
 
 
 @dataclass
@@ -22,14 +22,27 @@ def _in_stack(name, stack):
         if name in item.const_vars:
             return True
 
+const_vars_for_repl = None
+const_vars_stack_for_repl = None
 
 def const(a):
-    const_vars = []
-    const_vars_stack = [StackItem(const_vars, 0)]
+    global const_vars_for_repl
+    global const_vars_stack_for_repl
+
+    if isrepl() and const_vars_for_repl is not None:
+        const_vars_stack = const_vars_stack_for_repl
+        const_vars = const_vars_stack[-1].const_vars
+    else:
+        const_vars = []
+        const_vars_stack = [StackItem(const_vars, 0)]
 
     lineno = 1
     l = []
     for type, name in a:
+        if isrepl():
+            const_vars_for_repl = const_vars
+            const_vars_stack_for_repl = const_vars_stack
+
         #print(tok_name[type], name)
         l.append(Token(type, name))
         #print(l)
@@ -64,10 +77,10 @@ def const(a):
         #        yield l.pop(0)
         #    continue
         if l[0].name == 'def':
-            if l[-1].type != tokenize.INDENT:
+            if l[-1].name != ':':
                 continue
             const_vars = []
-            const_vars_stack.append(StackItem(const_vars, 1))
+            const_vars_stack.append(StackItem(const_vars, 0))
             for i in range(len(l)):
                 if l[i].name == 'const':
                     const_vars.append(l[i + 1].name)
@@ -84,7 +97,7 @@ def const(a):
         if l[0].type == tokenize.DEDENT:
             const_vars_stack[-1].indent -= 1
             yield l.pop(0)
-            if len(const_vars_stack) > 1 and const_vars_stack[-1].indent == 0:
+            if len(const_vars_stack) > 1 and const_vars_stack[-1].indent <= 0:
                 const_vars_stack.pop(-1)
                 const_vars = const_vars_stack[-1].const_vars
             continue
@@ -94,11 +107,15 @@ def const(a):
                 continue
             if len(l) == 1:
                 continue
-            if l[1].name != '=':
+            if l[1].name not in ['=', '+=', '-=', '*=', '/=', '%=', '&=', '|=', '^=', '<<=', '>>=', '**=', '//=', '@=', ':=']:
                 yield l.pop(0)
                 continue
             if l[-1].name != '\n' and l[-1].type != tokenize.ENDMARKER:
                 continue
+            if isrepl() and len(const_vars_stack) > 1:
+                while len(const_vars_stack) > 1:
+                    const_vars_stack.pop(-1)
+                    const_vars = const_vars_stack[-1].const_vars
             syntax_error_util.raise_error(f'invalid assignment to const {l[0].name}', lineno=lineno, offset=sum([len(each_l.name) for each_l in l[:-1]]) + len(l) - 2, line=' '.join([each_l.name for each_l in l[:-1]]))
 
         if l[0].name == '\n':

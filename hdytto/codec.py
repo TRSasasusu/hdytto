@@ -4,6 +4,7 @@ from token import tok_name
 import codecs, encodings
 from io import StringIO
 from encodings import utf_8
+import sys
 
 from .increment import increment
 from .comment import comment
@@ -51,6 +52,7 @@ def check_a(a):
 def transform(stream):
     #print("call transform")
     syntax_error_util.find_filepath(stream)
+    sys.tracebacklimit = None
 
     stream = comment(stream)
 
