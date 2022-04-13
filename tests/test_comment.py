@@ -20,5 +20,8 @@ class TestComment(unittest.TestCase):
         */
         self.assertEqual(15, a)
 
+        self.assertEqual('/' + '* bar *' + '/', '/* bar */')
+        self.assertEqual('/' + '* baz *' + '/', "/* baz */")
+
 if __name__ == '__main__':
     unittest.main()
