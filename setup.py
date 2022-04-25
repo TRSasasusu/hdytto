@@ -11,7 +11,7 @@ requires = []
 
 setuptools.setup(
     name='hdytto',
-    version='0.2',
+    version='0.2.1',
     description='Add not pythonic syntax into your python.',
     long_description=long_description,
     long_description_content_type="text/markdown",
